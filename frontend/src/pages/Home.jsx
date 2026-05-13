@@ -1,10 +1,11 @@
-import { useEffect } from 'react'
+import { useEffect, Suspense } from 'react'
 import { motion } from 'framer-motion'
 import { Link } from 'react-router-dom'
 import AOS from 'aos'
 import 'aos/dist/aos.css'
 import DiyaRow from '../components/DiyaRow'
 import EventsPreview from '../components/EventsPreview'
+import IncenseSmoke from '../components/IncenseSmoke'
 
 export default function Home() {
   useEffect(() => { AOS.init({ duration: 1000, once: true }) }, [])
@@ -15,14 +16,30 @@ export default function Home() {
       <section className="relative min-h-screen flex flex-col items-center justify-center text-center px-4 overflow-hidden">
         <div className="absolute inset-0 bg-gradient-radial from-orange-900/20 via-transparent to-transparent" />
 
+        {/* 3D Incense sticks — left & right of the hero circle */}
+        <div className="absolute left-1/2 top-1/2 -translate-y-1/2 pointer-events-none z-0"
+          style={{ marginLeft: '-200px', marginTop: '-30px' }}>
+          <Suspense fallback={null}>
+            <IncenseSmoke />
+          </Suspense>
+        </div>
+        <div className="absolute left-1/2 top-1/2 -translate-y-1/2 pointer-events-none z-0 scale-x-[-1]"
+          style={{ marginLeft: '120px', marginTop: '-30px' }}>
+          <Suspense fallback={null}>
+            <IncenseSmoke />
+          </Suspense>
+        </div>
+
+        {/* Animated Om symbol */}
         <motion.div
-          className="text-6xl mb-4 text-yellow-500"
+          className="text-6xl mb-4 text-yellow-500 relative z-10"
           animate={{ rotate: [0, 5, -5, 0], scale: [1, 1.05, 1] }}
           transition={{ duration: 4, repeat: Infinity }}
         >
           ॐ
         </motion.div>
 
+        {/* Temple image glow ring */}
         <motion.div
           className="relative mb-8 z-10"
           animate={{ boxShadow: ['0 0 40px #FFD700', '0 0 100px #FF6600', '0 0 40px #FFD700'] }}
@@ -65,7 +82,8 @@ export default function Home() {
           </div>
         </motion.div>
 
-        <motion.div className="absolute bottom-8 left-1/2 -translate-x-1/2"
+        {/* Scroll indicator */}
+        <motion.div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-10"
           animate={{ y: [0, 10, 0] }} transition={{ duration: 1.5, repeat: Infinity }}>
           <div className="w-6 h-10 border-2 border-yellow-600 rounded-full flex justify-center pt-2">
             <div className="w-1 h-3 bg-yellow-500 rounded-full" />
@@ -74,12 +92,8 @@ export default function Home() {
       </section>
 
       <DiyaRow count={9} />
-
       <div className="section-divider" />
-
-      {/* Events preview */}
       <EventsPreview />
-
       <div className="section-divider" />
 
       {/* DIVINE GALLERY */}
@@ -98,16 +112,11 @@ export default function Home() {
               />
             </motion.div>
           ))}
-          {/* Slot 6 — temple_.mp4 */}
           <motion.div className="aspect-square glass-card overflow-hidden rounded-lg cursor-pointer relative"
             whileHover={{ scale: 1.03 }} transition={{ duration: 0.3 }}>
-            <video
-              src="/temple-alt.mp4"
+            <video src="/temple-alt.mp4"
               className="w-full h-full object-cover opacity-85 hover:opacity-100 transition-opacity"
-              autoPlay
-              muted
-              loop
-              playsInline
+              autoPlay muted loop playsInline
             />
             <div className="absolute inset-0 flex items-end justify-start p-2 pointer-events-none">
               <span className="text-xs text-yellow-300 bg-black/40 px-2 py-1 rounded-full tracking-wider">▶ Live Darshan</span>
