@@ -1,36 +1,58 @@
-import { useEffect, Suspense } from 'react'
+import { useEffect, Suspense, Component } from 'react'
 import { motion } from 'framer-motion'
 import { Link } from 'react-router-dom'
 import AOS from 'aos'
 import 'aos/dist/aos.css'
 import DiyaRow from '../components/DiyaRow'
 import EventsPreview from '../components/EventsPreview'
-import IncenseSmoke from '../components/IncenseSmoke'
+
+// Lazy load Three.js so it never blocks the main app
+const IncenseSmoke = (() => {
+  let Comp = null
+  return function LazyIncense(props) {
+    if (!Comp) {
+      try {
+        // Dynamic import — won't crash if WebGL unavailable
+        Comp = require('../components/IncenseSmoke').default
+      } catch(e) {
+        return null
+      }
+    }
+    return Comp ? <Comp {...props} /> : null
+  }
+})()
+
+class PageErrorBoundary extends Component {
+  constructor(props) { super(props); this.state = { hasError: false } }
+  static getDerivedStateFromError() { return { hasError: false } }
+  componentDidCatch(err) { console.warn('Temple page error:', err) }
+  render() { return this.props.children }
+}
 
 export default function Home() {
   useEffect(() => { AOS.init({ duration: 1000, once: true }) }, [])
 
   return (
+    <PageErrorBoundary>
     <div className="bg-temple-gradient min-h-screen">
       {/* Hero Section */}
       <section className="relative min-h-screen flex flex-col items-center justify-center text-center px-4 overflow-hidden">
         <div className="absolute inset-0 bg-gradient-radial from-orange-900/20 via-transparent to-transparent" />
 
-        {/* 3D Incense sticks — left & right of the hero circle */}
+        {/* 3D Incense sticks flanking the hero circle */}
         <div className="absolute left-1/2 top-1/2 -translate-y-1/2 pointer-events-none z-0"
           style={{ marginLeft: '-200px', marginTop: '-30px' }}>
           <Suspense fallback={null}>
             <IncenseSmoke />
           </Suspense>
         </div>
-        <div className="absolute left-1/2 top-1/2 -translate-y-1/2 pointer-events-none z-0 scale-x-[-1]"
-          style={{ marginLeft: '120px', marginTop: '-30px' }}>
+        <div className="absolute left-1/2 top-1/2 -translate-y-1/2 pointer-events-none z-0"
+          style={{ marginLeft: '120px', marginTop: '-30px', transform: 'scaleX(-1)' }}>
           <Suspense fallback={null}>
             <IncenseSmoke />
           </Suspense>
         </div>
 
-        {/* Animated Om symbol */}
         <motion.div
           className="text-6xl mb-4 text-yellow-500 relative z-10"
           animate={{ rotate: [0, 5, -5, 0], scale: [1, 1.05, 1] }}
@@ -39,7 +61,6 @@ export default function Home() {
           ॐ
         </motion.div>
 
-        {/* Temple image glow ring */}
         <motion.div
           className="relative mb-8 z-10"
           animate={{ boxShadow: ['0 0 40px #FFD700', '0 0 100px #FF6600', '0 0 40px #FFD700'] }}
@@ -82,7 +103,6 @@ export default function Home() {
           </div>
         </motion.div>
 
-        {/* Scroll indicator */}
         <motion.div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-10"
           animate={{ y: [0, 10, 0] }} transition={{ duration: 1.5, repeat: Infinity }}>
           <div className="w-6 h-10 border-2 border-yellow-600 rounded-full flex justify-center pt-2">
@@ -138,5 +158,6 @@ export default function Home() {
         </div>
       </section>
     </div>
+    </PageErrorBoundary>
   )
 }
