@@ -38,7 +38,7 @@ export default function Navbar() {
         <Link to="/" className="flex items-center gap-2">
           <span className="text-2xl animate-flicker">🪔</span>
           <div>
-            <div className="text-yellow-400 font-bold text-sm tracking-widest" style={{ fontFamily: 'Cinzel' }}>KOTTILINGAL</div>
+            <div className="text-yellow-400 font-bold text-sm tracking-widest" style={{ fontFamily: 'Cinzel' }}>KOTTILINGAL THARAVADU</div>
             <div className="text-orange-400 text-xs tracking-wider">BHAGAVATHI TEMPLE</div>
           </div>
         </Link>

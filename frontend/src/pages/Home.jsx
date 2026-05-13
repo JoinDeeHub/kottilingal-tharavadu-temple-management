@@ -1,10 +1,9 @@
-import { useEffect, useRef } from 'react'
+import { useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { Link } from 'react-router-dom'
 import AOS from 'aos'
 import 'aos/dist/aos.css'
 import DiyaRow from '../components/DiyaRow'
-import StatsCounter from '../components/StatsCounter'
 import EventsPreview from '../components/EventsPreview'
 
 export default function Home() {
@@ -14,10 +13,8 @@ export default function Home() {
     <div className="bg-temple-gradient min-h-screen">
       {/* Hero Section */}
       <section className="relative min-h-screen flex flex-col items-center justify-center text-center px-4 overflow-hidden">
-        {/* Background overlay */}
         <div className="absolute inset-0 bg-gradient-radial from-orange-900/20 via-transparent to-transparent" />
 
-        {/* Animated Om symbol */}
         <motion.div
           className="text-6xl mb-4 text-yellow-500"
           animate={{ rotate: [0, 5, -5, 0], scale: [1, 1.05, 1] }}
@@ -26,7 +23,6 @@ export default function Home() {
           ॐ
         </motion.div>
 
-        {/* Temple image glow ring */}
         <motion.div
           className="relative mb-8 z-10"
           animate={{ boxShadow: ['0 0 40px #FFD700', '0 0 100px #FF6600', '0 0 40px #FFD700'] }}
@@ -69,7 +65,6 @@ export default function Home() {
           </div>
         </motion.div>
 
-        {/* Scroll indicator */}
         <motion.div className="absolute bottom-8 left-1/2 -translate-x-1/2"
           animate={{ y: [0, 10, 0] }} transition={{ duration: 1.5, repeat: Infinity }}>
           <div className="w-6 h-10 border-2 border-yellow-600 rounded-full flex justify-center pt-2">
@@ -80,12 +75,6 @@ export default function Home() {
 
       <DiyaRow count={9} />
 
-      {/* Stats */}
-      <section className="py-16 px-4" data-aos="fade-up">
-        <h2 className="text-center text-gradient-gold text-3xl font-bold mb-10 tracking-widest" style={{ fontFamily: 'Cinzel' }}>TEMPLE AT A GLANCE</h2>
-        <StatsCounter />
-      </section>
-
       <div className="section-divider" />
 
       {/* Events preview */}
@@ -93,14 +82,14 @@ export default function Home() {
 
       <div className="section-divider" />
 
-      {/* Temple photo gallery preview */}
+      {/* DIVINE GALLERY */}
       <section className="py-16 px-4 max-w-6xl mx-auto" data-aos="fade-up">
-        <h2 className="text-center text-gradient-gold text-3xl font-bold mb-10 tracking-widest" style={{ fontFamily: 'Cinzel' }}>DIVINE MOMENTS</h2>
+        <h2 className="text-center text-gradient-gold text-3xl font-bold mb-10 tracking-widest" style={{ fontFamily: 'Cinzel' }}>DIVINE GALLERY</h2>
         <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
           {[1,2,3,4,5].map(i => (
             <motion.div key={i} className="aspect-square glass-card overflow-hidden rounded-lg cursor-pointer"
               whileHover={{ scale: 1.03 }} transition={{ duration: 0.3 }}>
-              <img src={`/gallery/temple-${i}.jpg`} alt={`Temple ${i}`}
+              <img src={`/gallery/temple-${i}.jpg`} alt={`Temple moment ${i}`}
                 className="w-full h-full object-cover opacity-80 hover:opacity-100 transition-opacity"
                 onError={(e) => {
                   e.target.style.display = 'none'
@@ -109,12 +98,12 @@ export default function Home() {
               />
             </motion.div>
           ))}
-          {/* Slot 6 — promo video */}
+          {/* Slot 6 — temple_.mp4 */}
           <motion.div className="aspect-square glass-card overflow-hidden rounded-lg cursor-pointer relative"
             whileHover={{ scale: 1.03 }} transition={{ duration: 0.3 }}>
             <video
-              src="/temple-promo.mp4"
-              className="w-full h-full object-cover opacity-80 hover:opacity-100 transition-opacity"
+              src="/temple-alt.mp4"
+              className="w-full h-full object-cover opacity-85 hover:opacity-100 transition-opacity"
               autoPlay
               muted
               loop

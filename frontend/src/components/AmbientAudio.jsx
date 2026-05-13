@@ -7,13 +7,63 @@ export default function AmbientAudio() {
   const [started, setStarted] = useState(false)
   const [showHint, setShowHint] = useState(true)
 
-  // Free-to-use Om chant from a public CDN
-  const SRC = 'https://www.soundjay.com/misc/sounds/bell-ringing-05.mp3'
-  // We generate a soft Om tone via Web Audio API instead — no external dependency
-
   useEffect(() => {
-    // Create audio context and generate a soft Om-like drone
-    let ctx, gainNode, oscillators = [], interval
+    let ctx, masterGain, oscillators = []
+
+    const createOmDrone = (audioCtx, destination) => {
+      // Deep Om drone: base 110Hz (A2) with rich harmonics
+      const configs = [
+        { freq: 110,  gain: 0.18, type: 'sine' },
+        { freq: 220,  gain: 0.10, type: 'sine' },
+        { freq: 330,  gain: 0.06, type: 'sine' },
+        { freq: 440,  gain: 0.03, type: 'sine' },
+        { freq: 55,   gain: 0.12, type: 'sine' }, // sub-bass warmth
+      ]
+      configs.forEach(({ freq, gain, type }) => {
+        const osc = audioCtx.createOscillator()
+        const oscGain = audioCtx.createGain()
+        // Slight detune for warmth / chorus effect
+        osc.type = type
+        osc.frequency.value = freq
+        osc.detune.value = (Math.random() - 0.5) * 8
+        oscGain.gain.value = gain
+        // Slow vibrato LFO
+        const lfo = audioCtx.createOscillator()
+        const lfoGain = audioCtx.createGain()
+        lfo.frequency.value = 0.15 + Math.random() * 0.1
+        lfoGain.gain.value = freq * 0.003
+        lfo.connect(lfoGain)
+        lfoGain.connect(osc.frequency)
+        lfo.start()
+        osc.connect(oscGain)
+        oscGain.connect(destination)
+        osc.start()
+        oscillators.push(osc, lfo)
+      })
+    }
+
+    const createBellLayer = (audioCtx, destination, time) => {
+      // Temple bell: inharmonic partials that decay — like a singing bowl / Om bell
+      const bellPartials = [
+        { freq: 432,  gainPeak: 0.15, decay: 4.0 },
+        { freq: 864,  gainPeak: 0.07, decay: 2.5 },
+        { freq: 1296, gainPeak: 0.03, decay: 1.5 },
+        { freq: 540,  gainPeak: 0.08, decay: 3.2 },
+      ]
+      bellPartials.forEach(({ freq, gainPeak, decay }) => {
+        const osc = audioCtx.createOscillator()
+        const g = audioCtx.createGain()
+        osc.type = 'sine'
+        osc.frequency.value = freq
+        g.gain.setValueAtTime(0, time)
+        g.gain.linearRampToValueAtTime(gainPeak, time + 0.01)
+        g.gain.exponentialRampToValueAtTime(0.0001, time + decay)
+        osc.connect(g)
+        g.connect(destination)
+        osc.start(time)
+        osc.stop(time + decay + 0.1)
+      })
+    }
 
     const start = () => {
       if (started) return
@@ -21,103 +71,111 @@ export default function AmbientAudio() {
       setShowHint(false)
 
       ctx = new (window.AudioContext || window.webkitAudioContext)()
-      gainNode = ctx.createGain()
-      gainNode.gain.setValueAtTime(0, ctx.currentTime)
-      gainNode.gain.linearRampToValueAtTime(0.06, ctx.currentTime + 3) // fade in gently
-      gainNode.connect(ctx.destination)
 
-      // Om drone: fundamental + harmonics (A2 = 110Hz base)
-      const freqs = [110, 165, 220, 275, 330]
-      const gains = [1, 0.5, 0.3, 0.15, 0.08]
+      // Master gain — fade in gently
+      masterGain = ctx.createGain()
+      masterGain.gain.setValueAtTime(0, ctx.currentTime)
+      masterGain.gain.linearRampToValueAtTime(0.55, ctx.currentTime + 4)
+      masterGain.connect(ctx.destination)
 
-      freqs.forEach((freq, idx) => {
-        const osc = ctx.createOscillator()
-        const oscGain = ctx.createGain()
-        osc.type = 'sine'
-        osc.frequency.setValueAtTime(freq, ctx.currentTime)
-        // Slow vibrato for warmth
-        const lfo = ctx.createOscillator()
-        const lfoGain = ctx.createGain()
-        lfo.frequency.value = 0.2 + idx * 0.05
-        lfoGain.gain.value = 0.8
-        lfo.connect(lfoGain)
-        lfoGain.connect(osc.frequency)
-        lfo.start()
-        oscGain.gain.value = gains[idx] * 0.4
-        osc.connect(oscGain)
-        oscGain.connect(gainNode)
-        osc.start()
-        oscillators.push(osc, lfo)
-      })
+      // Reverb (convolver with impulse response synthesis)
+      const reverbNode = ctx.createConvolver()
+      const reverbLen = ctx.sampleRate * 3
+      const reverbBuf = ctx.createBuffer(2, reverbLen, ctx.sampleRate)
+      for (let ch = 0; ch < 2; ch++) {
+        const data = reverbBuf.getChannelData(ch)
+        for (let i = 0; i < reverbLen; i++) {
+          data[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / reverbLen, 2.5)
+        }
+      }
+      reverbNode.buffer = reverbBuf
+
+      const dryGain = ctx.createGain()
+      const wetGain = ctx.createGain()
+      dryGain.gain.value = 0.6
+      wetGain.gain.value = 0.4
+
+      const droneOut = ctx.createGain()
+      droneOut.connect(dryGain)
+      droneOut.connect(reverbNode)
+      reverbNode.connect(wetGain)
+      dryGain.connect(masterGain)
+      wetGain.connect(masterGain)
+
+      createOmDrone(ctx, droneOut)
+
+      // Ring temple bell immediately, then every ~18 seconds
+      createBellLayer(ctx, masterGain, ctx.currentTime + 0.5)
+      const bellInterval = setInterval(() => {
+        if (ctx && ctx.state === 'running') {
+          createBellLayer(ctx, masterGain, ctx.currentTime)
+        }
+      }, 18000)
+
+      audioRef.current = { ctx, masterGain, oscillators, bellInterval }
     }
 
     const handleInteraction = () => start()
     window.addEventListener('click', handleInteraction, { once: true })
     window.addEventListener('touchstart', handleInteraction, { once: true })
 
-    // Pause when tab hidden
     const handleVisibility = () => {
-      if (!gainNode) return
+      const { masterGain: mg, ctx: c } = audioRef.current || {}
+      if (!mg || !c) return
       if (document.hidden) {
-        gainNode.gain.linearRampToValueAtTime(0, ctx.currentTime + 1)
+        mg.gain.linearRampToValueAtTime(0, c.currentTime + 1)
       } else if (!muted) {
-        gainNode.gain.linearRampToValueAtTime(0.06, ctx.currentTime + 1)
+        mg.gain.linearRampToValueAtTime(0.55, c.currentTime + 1)
       }
     }
     document.addEventListener('visibilitychange', handleVisibility)
-
-    // Store refs for mute toggle
-    audioRef.current = { ctx, gainNode, oscillators }
 
     return () => {
       window.removeEventListener('click', handleInteraction)
       window.removeEventListener('touchstart', handleInteraction)
       document.removeEventListener('visibilitychange', handleVisibility)
-      oscillators.forEach(o => { try { o.stop() } catch(e) {} })
-      if (ctx) ctx.close()
+      const { oscillators: oscs, bellInterval: bi, ctx: c } = audioRef.current || {}
+      if (bi) clearInterval(bi)
+      if (oscs) oscs.forEach(o => { try { o.stop() } catch(e) {} })
+      if (c) c.close()
     }
   }, [])
 
   const toggleMute = (e) => {
     e.stopPropagation()
-    const { gainNode, ctx } = audioRef.current || {}
-    if (!gainNode || !ctx) return
+    const { masterGain: mg, ctx: c } = audioRef.current || {}
+    if (!mg || !c) return
     const next = !muted
     setMuted(next)
-    gainNode.gain.linearRampToValueAtTime(
-      next ? 0 : 0.06,
-      ctx.currentTime + 1
-    )
+    mg.gain.linearRampToValueAtTime(next ? 0 : 0.55, c.currentTime + 1.5)
   }
 
   return (
     <>
-      {/* Floating hint on load */}
       <AnimatePresence>
         {showHint && (
           <motion.div
-            className="fixed bottom-20 right-4 z-50 text-xs text-amber-300/70 bg-black/40 px-3 py-1.5 rounded-full pointer-events-none"
+            className="fixed bottom-20 right-4 z-50 text-xs text-amber-300/70 bg-black/50 px-3 py-1.5 rounded-full pointer-events-none backdrop-blur-sm"
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0 }}
-            transition={{ delay: 2, duration: 1 }}
+            transition={{ delay: 2.5, duration: 1 }}
           >
-            🎵 Click anywhere for ambient Om
+            🔔 Click anywhere to awaken the temple ambience
           </motion.div>
         )}
       </AnimatePresence>
 
-      {/* Mute toggle button — only shown after audio starts */}
       <AnimatePresence>
         {started && (
           <motion.button
             onClick={toggleMute}
-            className="fixed bottom-4 right-4 z-50 w-10 h-10 rounded-full bg-black/50 border border-yellow-600/40 flex items-center justify-center text-lg hover:bg-yellow-900/40 transition-all"
-            title={muted ? 'Unmute ambient Om' : 'Mute ambient Om'}
+            className="fixed bottom-4 right-4 z-50 w-11 h-11 rounded-full bg-black/60 border border-yellow-600/50 flex items-center justify-center text-xl hover:bg-yellow-900/50 transition-all backdrop-blur-sm"
+            title={muted ? 'Unmute Om ambience' : 'Mute Om ambience'}
             initial={{ opacity: 0, scale: 0 }}
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0 }}
-            whileHover={{ scale: 1.1 }}
+            whileHover={{ scale: 1.15 }}
             whileTap={{ scale: 0.9 }}
           >
             {muted ? '🔕' : '🔔'}
