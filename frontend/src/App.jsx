@@ -3,6 +3,7 @@ import { Toaster } from 'react-hot-toast'
 import Navbar from './components/Navbar'
 import Footer from './components/Footer'
 import PetalRain from './components/PetalRain'
+import AmbientAudio from './components/AmbientAudio'
 import Home from './pages/Home'
 import About from './pages/About'
 import Events from './pages/Events'
@@ -20,6 +21,7 @@ export default function App() {
       <Router>
         <Toaster position="top-center" toastOptions={{ style: { background: '#2d1000', color: '#FFD700', border: '1px solid #FFD70044' } }} />
         <PetalRain />
+        <AmbientAudio />
         <Navbar />
         <Routes>
           <Route path="/" element={<Home />} />
