@@ -4,6 +4,7 @@ import Navbar from './components/Navbar'
 import Footer from './components/Footer'
 import PetalRain from './components/PetalRain'
 import AmbientAudio from './components/AmbientAudio'
+import StarField from './components/StarField'
 import Home from './pages/Home'
 import About from './pages/About'
 import Events from './pages/Events'
@@ -19,7 +20,8 @@ export default function App() {
   return (
     <AuthProvider>
       <Router>
-        <Toaster position="top-center" toastOptions={{ style: { background: '#2d1000', color: '#FFD700', border: '1px solid #FFD70044' } }} />
+        <StarField />
+        <Toaster position="top-center" toastOptions={{ style: { background: '#0A0E1A', color: '#C9A84C', border: '1px solid rgba(201,168,76,0.3)' } }} />
         <PetalRain />
         <AmbientAudio />
         <Navbar />
