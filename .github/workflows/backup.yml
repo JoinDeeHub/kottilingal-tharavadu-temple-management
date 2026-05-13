@@ -1,0 +1,30 @@
+name: 🗄️ Automated Database Backup
+
+on:
+  schedule:
+    - cron: '0 1 * * *'  # Every day at 1 AM IST (7:30 PM UTC)
+  workflow_dispatch:  # Allow manual trigger
+
+jobs:
+  backup:
+    name: 💾 PostgreSQL Backup
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Backup Database via SSH
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+          script: |
+            BACKUP_DATE=$(date +%Y-%m-%d_%H-%M)
+            BACKUP_DIR="/opt/backups/temple"
+            mkdir -p $BACKUP_DIR
+            docker exec temple_db pg_dump -U templeadmin templedb > "$BACKUP_DIR/backup_$BACKUP_DATE.sql"
+            gzip "$BACKUP_DIR/backup_$BACKUP_DATE.sql"
+            # Keep only last 30 backups
+            ls -t $BACKUP_DIR/backup_*.sql.gz | tail -n +31 | xargs -r rm
+            echo "✅ Backup completed: backup_$BACKUP_DATE.sql.gz"
+      - name: Notify backup success
+        run: echo "🗄️ Database backup completed for $(date)"
