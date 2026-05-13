@@ -51,7 +51,7 @@ services:
     networks:
       - temple_net
     ports:
-      - "3000:80"
+      - "3007:80"
 
   nginx:
     image: nginx:alpine
