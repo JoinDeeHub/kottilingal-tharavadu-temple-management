@@ -3,6 +3,10 @@ import { motion } from 'framer-motion'
 import DiyaRow from '../components/DiyaRow'
 import ScrollReveal from '../components/ScrollReveal'
 
+// Exact GPS: Thrikkadeeri, Munnurcode, Cherppulassery, Palakkad 679502
+const LAT = 10.8318721
+const LNG = 76.3904487
+
 const PLACEHOLDER = {
   deity: 'Sree Bhagavathi (Goddess of Power & Prosperity)',
   established: 'Over 100 years ago — exact year being confirmed',
@@ -32,7 +36,7 @@ export default function About() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1.2 }}
         >
-          <p className="text-gold text-sm tracking-[0.4em] uppercase mb-4" style={{ color: 'var(--gold-dim)' }}>Est. Kottilinghal, Palakkad</p>
+          <p className="text-sm tracking-[0.4em] uppercase mb-4" style={{ color: 'var(--gold-dim)' }}>Kottilinghal · Thrikkadeeri · Palakkad</p>
           <h1 className="shimmer-text text-5xl md:text-7xl font-black tracking-widest mb-4" style={{ fontFamily: 'Cinzel' }}>
             THE TEMPLE
           </h1>
@@ -55,7 +59,8 @@ export default function About() {
               celebrate festivals, and maintain the divine covenant with the Goddess.
             </p>
             <p className="leading-relaxed" style={{ color: 'var(--ivory-dim)', fontSize: '1.1rem' }}>
-              Located in the serene village of Kottilinghal (Ho), Thrikkadeeri, Munnurcode, the temple
+              Located in the serene hamlet of <strong style={{ color: 'var(--ivory)' }}>Kottilinghal (Ho), Thrikkadeeri,
+              Munnurcode (Po), Cherppulassery, Palakkad, Kerala — 679502</strong>, the temple
               follows the <em>Kerala Tantric Agama</em> tradition — a living lineage of ritual knowledge
               passed from generation to generation within the tharavadu.
             </p>
@@ -76,9 +81,8 @@ export default function About() {
           <h2 className="text-center text-gradient-gold text-2xl font-bold tracking-widest mb-10" style={{ fontFamily: 'Cinzel' }}>PRESIDING DEITY & SHRINES</h2>
         </ScrollReveal>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {/* Main deity */}
           <ScrollReveal delay={0} direction="left">
-            <div className="glass-card p-6 flex gap-4 items-start col-span-1 md:col-span-2">
+            <div className="glass-card p-6 flex gap-4 items-start" style={{ gridColumn: 'span 2' }}>
               <span className="text-4xl">🛕</span>
               <div>
                 <h3 className="font-bold mb-1 text-xl" style={{ color: 'var(--gold)', fontFamily: 'Cinzel' }}>SREE BHAGAVATHI</h3>
@@ -124,35 +128,58 @@ export default function About() {
         </div>
       </section>
 
-      {/* Google Maps */}
+      {/* Google Maps — exact GPS */}
       <section className="py-16 px-4 max-w-5xl mx-auto">
         <ScrollReveal>
           <div className="ornament">✦</div>
-          <h2 className="text-center text-gradient-gold text-2xl font-bold tracking-widest mb-10" style={{ fontFamily: 'Cinzel' }}>FIND THE TEMPLE</h2>
+          <h2 className="text-center text-gradient-gold text-2xl font-bold tracking-widest mb-4" style={{ fontFamily: 'Cinzel' }}>FIND THE TEMPLE</h2>
+          <p className="text-center text-sm mb-10" style={{ color: 'var(--ivory-dim)' }}>
+            Exact pin will be updated tomorrow with the temple's precise GPS coordinates
+          </p>
         </ScrollReveal>
         <ScrollReveal delay={200}>
           <div className="glass-card overflow-hidden" style={{ borderColor: 'rgba(201,168,76,0.25)' }}>
-            <div className="p-4 text-center" style={{ background: 'rgba(139,0,0,0.12)' }}>
-              <p className="text-sm tracking-wider" style={{ color: 'var(--gold)' }}>📍 Kottilinghal (Ho), Thrikkadeeri, Munnurcode (Po), Cherppulassery, Palakkad, Kerala – 679502</p>
+
+            {/* Address bar */}
+            <div className="p-5" style={{ background: 'rgba(139,0,0,0.12)', borderBottom: '1px solid rgba(201,168,76,0.15)' }}>
+              <div className="flex flex-col md:flex-row gap-1 md:gap-3 items-start md:items-center justify-center text-center">
+                <span className="text-xl">📍</span>
+                <div className="text-sm leading-relaxed" style={{ color: 'var(--gold)' }}>
+                  <span className="font-bold">Kottilinghal (Ho), Thrikkadeeri,</span>{' '}
+                  Munnurcode (Po), Cherppulassery,{' '}
+                  Palakkad, Kerala – <span className="font-bold">679502</span>
+                </div>
+              </div>
             </div>
-            <div style={{ width: '100%', height: '420px' }}>
+
+            {/* Map embed — centred on Thrikkadeeri (10.8318721, 76.3904487) */}
+            <div style={{ width: '100%', height: '440px' }}>
               <iframe
-                title="Kottilingal Temple Location"
-                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3917.0!2d76.3!3d10.85!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2sCherppulassery%2C+Palakkad%2C+Kerala+679502!5e0!3m2!1sen!2sin!4v1"
+                title="Kottilingal Temple — Thrikkadeeri, Palakkad"
+                src={`https://maps.google.com/maps?q=${LAT},${LNG}&z=15&output=embed`}
                 width="100%"
                 height="100%"
-                style={{ border: 0, filter: 'invert(90%) hue-rotate(180deg) saturate(0.8) brightness(0.85)' }}
+                style={{
+                  border: 0,
+                  filter: 'invert(92%) hue-rotate(180deg) saturate(0.75) brightness(0.88)',
+                }}
                 allowFullScreen
                 loading="lazy"
                 referrerPolicy="no-referrer-when-downgrade"
               />
             </div>
-            <div className="p-4 text-center">
+
+            {/* Coordinates + CTA */}
+            <div className="p-4 flex flex-col md:flex-row items-center justify-between gap-3"
+              style={{ background: 'rgba(10,14,26,0.5)' }}>
+              <p className="text-xs font-mono" style={{ color: 'var(--gold-dim)' }}>
+                {LAT}°N, {LNG}°E · Thrikkadeeri, Ottapalam Taluk
+              </p>
               <a
-                href="https://maps.google.com/?q=Cherppulassery,Palakkad,Kerala,679502"
+                href={`https://maps.google.com/?q=${LAT},${LNG}`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="btn-temple inline-block text-sm"
+                className="btn-temple text-sm"
               >
                 Open in Google Maps →
               </a>
