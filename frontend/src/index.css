@@ -3,8 +3,9 @@
 @tailwind utilities;
 
 /* =============================================
-   KOTTILINGAL TEMPLE — Mont-Fort Inspired Theme
-   Deep Navy + Crimson + Antique Gold
+   KOTTILINGAL TEMPLE
+   Deep Navy · Crimson · Antique Gold
+   Cinematic 3D Scroll Experience
    ============================================= */
 
 :root {
@@ -13,15 +14,14 @@
   --gold-dim:    #8B6914;
   --crimson:     #8B0000;
   --crimson-mid: #6B0F1A;
-  --navy:        #0A0E1A;
-  --navy-mid:    #0F1628;
-  --navy-light:  #1A2444;
-  --ivory:       #F5EDD6;
-  --ivory-dim:   #C4B48A;
+  --navy:        #080C17;
+  --navy-mid:    #0D1220;
+  --navy-light:  #141E38;
+  --ivory:       #F0E8D2;
+  --ivory-dim:   #B8A87E;
 }
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
-
 html { scroll-behavior: smooth; }
 
 body {
@@ -29,163 +29,148 @@ body {
   color: var(--ivory);
   font-family: 'Cormorant Garamond', 'EB Garamond', Georgia, serif;
   overflow-x: hidden;
-  cursor: default;
+  -webkit-font-smoothing: antialiased;
 }
 
 /* ---- Scrollbar ---- */
-::-webkit-scrollbar { width: 5px; }
+::-webkit-scrollbar { width: 4px; }
 ::-webkit-scrollbar-track { background: var(--navy); }
 ::-webkit-scrollbar-thumb {
-  background: linear-gradient(var(--gold), var(--crimson));
-  border-radius: 3px;
+  background: linear-gradient(var(--crimson), var(--gold));
+  border-radius: 2px;
 }
 
-/* ---- Background gradient (deep navy to crimson core) ---- */
+/* ---- Page background ---- */
 .bg-temple-gradient {
   background:
-    radial-gradient(ellipse 80% 60% at 50% 0%, rgba(139,0,0,0.18) 0%, transparent 70%),
-    radial-gradient(ellipse 60% 40% at 50% 100%, rgba(139,0,0,0.10) 0%, transparent 60%),
-    linear-gradient(180deg,
-      #0A0E1A 0%,
-      #0D1120 15%,
-      #111828 35%,
-      #0F1628 60%,
-      #0A0E1A 100%
-    );
+    radial-gradient(ellipse 90% 50% at 50% 0%,   rgba(139,0,0,0.15) 0%, transparent 60%),
+    radial-gradient(ellipse 70% 40% at 50% 100%, rgba(139,0,0,0.08) 0%, transparent 55%),
+    linear-gradient(180deg, #080C17 0%, #0C1020 20%, #101626 50%, #0C1020 80%, #080C17 100%);
 }
 
-/* ---- Gold text gradient ---- */
+/* ---- Text effects ---- */
 .text-gradient-gold {
-  background: linear-gradient(135deg, #C9A84C 0%, #FFD700 40%, #C9A84C 70%, #8B6914 100%);
+  background: linear-gradient(135deg, #C9A84C 0%, #FFD700 45%, #C9A84C 75%, #7A5C10 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
 }
 
-/* ---- Shimmer heading ---- */
 @keyframes shimmer {
-  0%   { background-position: -300% center; }
-  100% { background-position: 300% center; }
+  0%   { background-position: -400% center; }
+  100% { background-position: 400% center; }
 }
 .shimmer-text {
   background: linear-gradient(90deg,
-    #8B6914 0%, #C9A84C 25%, #FFD700 45%,
-    #FFF8DC 50%, #FFD700 55%, #C9A84C 75%, #8B6914 100%
+    #7A5C10 0%, #C9A84C 20%, #FFD700 40%,
+    #FFF8DC 50%, #FFD700 60%, #C9A84C 80%, #7A5C10 100%
   );
-  background-size: 300% auto;
+  background-size: 400% auto;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
-  animation: shimmer 4s linear infinite;
+  animation: shimmer 5s linear infinite;
 }
 
-/* ---- Glass card — dark navy tinted ---- */
+/* ---- Glass card ---- */
 .glass-card {
-  background: rgba(10, 14, 26, 0.72);
-  backdrop-filter: blur(16px);
-  border: 1px solid rgba(201, 168, 76, 0.18);
+  background: rgba(8, 12, 23, 0.78);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(201, 168, 76, 0.14);
   border-radius: 14px;
-  box-shadow: 0 4px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(201,168,76,0.08);
-  transition: border-color 0.3s, box-shadow 0.3s;
+  box-shadow:
+    0 4px 24px rgba(0,0,0,0.5),
+    inset 0 1px 0 rgba(201,168,76,0.06);
+  transition: border-color 0.35s, box-shadow 0.35s, transform 0.35s;
 }
 .glass-card:hover {
-  border-color: rgba(201, 168, 76, 0.35);
-  box-shadow: 0 8px 48px rgba(139,0,0,0.2), 0 0 0 1px rgba(201,168,76,0.2);
+  border-color: rgba(201, 168, 76, 0.28);
+  box-shadow:
+    0 12px 48px rgba(139,0,0,0.25),
+    0 0 0 1px rgba(201,168,76,0.18),
+    inset 0 1px 0 rgba(201,168,76,0.08);
 }
 
-/* ---- Section divider ---- */
+/* ---- Section divider with OM ---- */
 .section-divider {
   height: 1px;
   background: linear-gradient(90deg,
-    transparent 0%, rgba(201,168,76,0.15) 20%,
-    rgba(201,168,76,0.6) 50%,
-    rgba(201,168,76,0.15) 80%, transparent 100%
+    transparent 0%, rgba(201,168,76,0.1) 15%,
+    rgba(201,168,76,0.5) 50%,
+    rgba(201,168,76,0.1) 85%, transparent 100%
   );
   margin: 3rem 0;
   position: relative;
 }
 .section-divider::after {
   content: 'ॐ';
-  position: absolute;
-  left: 50%;
-  top: 50%;
+  position: absolute; left: 50%; top: 50%;
   transform: translate(-50%, -50%);
-  color: var(--gold);
-  font-size: 1rem;
-  background: var(--navy);
-  padding: 0 0.75rem;
-  opacity: 0.7;
+  color: var(--gold); font-size: 1rem;
+  background: var(--navy); padding: 0 0.8rem;
+  opacity: 0.6;
 }
 
 /* ---- Diya glow ---- */
 .diya-glow {
-  filter: drop-shadow(0 0 6px #FF6600) drop-shadow(0 0 12px rgba(255,215,0,0.5));
-}
-
-/* ---- Parallax starfield ---- */
-#starfield {
-  position: fixed;
-  inset: 0;
-  pointer-events: none;
-  z-index: 0;
-  overflow: hidden;
-}
-
-/* ---- Reveal animations ---- */
-@keyframes fadeSlideUp {
-  from { opacity: 0; transform: translateY(40px); }
-  to   { opacity: 1; transform: translateY(0); }
-}
-.reveal {
-  opacity: 0;
-  animation: fadeSlideUp 0.9s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  filter: drop-shadow(0 0 5px #FF6600) drop-shadow(0 0 10px rgba(255,200,0,0.4));
 }
 
 /* ---- Ornament line ---- */
 .ornament {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  color: var(--gold-dim);
-  margin: 1.5rem auto;
-  max-width: 300px;
+  display: flex; align-items: center;
+  gap: 1rem; color: var(--gold-dim);
+  margin: 1.5rem auto; max-width: 280px;
 }
 .ornament::before, .ornament::after {
-  content: '';
-  flex: 1;
-  height: 1px;
-  background: linear-gradient(to right, transparent, var(--gold-dim));
+  content: ''; flex: 1; height: 1px;
 }
-.ornament::after {
-  background: linear-gradient(to left, transparent, var(--gold-dim));
-}
+.ornament::before { background: linear-gradient(to right,  transparent, var(--gold-dim)); }
+.ornament::after  { background: linear-gradient(to left,   transparent, var(--gold-dim)); }
 
-/* ---- Crimson accent button ---- */
+/* ---- Temple button ---- */
 .btn-temple {
   background: linear-gradient(135deg, var(--crimson-mid), var(--crimson));
-  border: 1px solid rgba(201,168,76,0.3);
+  border: 1px solid rgba(201,168,76,0.28);
   color: var(--gold);
   padding: 0.75rem 2rem;
   border-radius: 9999px;
   font-family: 'Cinzel', serif;
   letter-spacing: 0.1em;
-  transition: all 0.3s;
-  box-shadow: 0 0 20px rgba(139,0,0,0.3);
+  font-size: 0.82rem;
+  transition: all 0.35s;
+  box-shadow: 0 0 18px rgba(139,0,0,0.28);
+  cursor: pointer;
+  display: inline-block;
 }
 .btn-temple:hover {
-  box-shadow: 0 0 40px rgba(139,0,0,0.6), 0 0 0 1px rgba(201,168,76,0.4);
-  transform: translateY(-1px);
+  box-shadow: 0 0 40px rgba(139,0,0,0.55), 0 0 0 1px rgba(201,168,76,0.35);
+  transform: translateY(-2px);
 }
 
-/* ---- Floating particles ---- */
-@keyframes floatUp {
-  0%   { transform: translateY(0) scale(1);   opacity: 0.6; }
-  100% { transform: translateY(-100vh) scale(0.3); opacity: 0; }
+/* ---- 3D perspective wrapper ---- */
+.perspective-wrap {
+  perspective: 1200px;
+  perspective-origin: 50% 40%;
 }
-.particle {
-  position: fixed;
-  border-radius: 50%;
-  pointer-events: none;
-  z-index: 1;
-  animation: floatUp linear infinite;
+
+/* ---- Scroll-driven letter reveal (perspective) ---- */
+@keyframes charReveal {
+  from { opacity: 0; transform: translateY(50px) rotateX(-35deg); }
+  to   { opacity: 1; transform: translateY(0)    rotateX(0deg); }
+}
+
+/* ---- Noise grain overlay ---- */
+.grain::after {
+  content: '';
+  position: fixed; inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+  pointer-events: none; z-index: 9998;
+  opacity: 0.035;
+}
+
+/* ---- Responsive ---- */
+@media (max-width: 768px) {
+  .shimmer-text { font-size: clamp(1.8rem, 8vw, 3rem) !important; }
 }
