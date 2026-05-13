@@ -21,7 +21,7 @@ export default function StatsCounter() {
   }, [])
 
   const items = [
-    { label: 'Families', value: stats.families, suffix: '+', icon: '🏠' },
+    { label: 'Families', value: stats.families, suffix: '+', icon: '👨\u200d👩\u200d👧\u200d👦' },
     { label: 'Total Collected', value: stats.collected, prefix: '₹', suffix: '', icon: '💰' },
     { label: 'Sponsors', value: stats.sponsors, suffix: '+', icon: '🤝' },
     { label: 'Years of Devotion', value: stats.years, suffix: '+', icon: '📿' },

@@ -50,7 +50,8 @@ export default function Home() {
             BHAGAVATHI TEMPLE
           </h2>
           <p className="text-amber-200/80 text-lg mb-1">കോറ്റിലിങ്ങൽ തറവാട് ഭഗവതി ക്ഷേത്രം</p>
-          <p className="text-amber-200/60 text-sm tracking-wider mb-8">📍 Palakkad, Kerala</p>
+          <p className="text-amber-200/60 text-sm tracking-wider mb-1">📍 Kottilinghal (Ho), Thrikkadeeri</p>
+          <p className="text-amber-200/60 text-sm tracking-wider mb-8">Munnurcode (Po), Cherppulassery, Palakkad, Kerala – 679502</p>
 
           <div className="flex flex-wrap justify-center gap-4">
             <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
@@ -96,7 +97,7 @@ export default function Home() {
       <section className="py-16 px-4 max-w-6xl mx-auto" data-aos="fade-up">
         <h2 className="text-center text-gradient-gold text-3xl font-bold mb-10 tracking-widest" style={{ fontFamily: 'Cinzel' }}>DIVINE MOMENTS</h2>
         <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
-          {[1,2,3,4,5,6].map(i => (
+          {[1,2,3,4,5].map(i => (
             <motion.div key={i} className="aspect-square glass-card overflow-hidden rounded-lg cursor-pointer"
               whileHover={{ scale: 1.03 }} transition={{ duration: 0.3 }}>
               <img src={`/gallery/temple-${i}.jpg`} alt={`Temple ${i}`}
@@ -108,6 +109,21 @@ export default function Home() {
               />
             </motion.div>
           ))}
+          {/* Slot 6 — promo video */}
+          <motion.div className="aspect-square glass-card overflow-hidden rounded-lg cursor-pointer relative"
+            whileHover={{ scale: 1.03 }} transition={{ duration: 0.3 }}>
+            <video
+              src="/temple-promo.mp4"
+              className="w-full h-full object-cover opacity-80 hover:opacity-100 transition-opacity"
+              autoPlay
+              muted
+              loop
+              playsInline
+            />
+            <div className="absolute inset-0 flex items-end justify-start p-2 pointer-events-none">
+              <span className="text-xs text-yellow-300 bg-black/40 px-2 py-1 rounded-full tracking-wider">▶ Live Darshan</span>
+            </div>
+          </motion.div>
         </div>
         <div className="text-center mt-6">
           <Link to="/gallery" className="text-yellow-400 border border-yellow-600 px-6 py-2 rounded-full hover:bg-yellow-600/20 transition-all text-sm">View Full Gallery →</Link>
@@ -119,7 +135,7 @@ export default function Home() {
         <div className="max-w-3xl mx-auto">
           <p className="text-5xl mb-6">🙏</p>
           <blockquote className="text-xl md:text-2xl text-amber-200/90 italic" style={{ fontFamily: 'EB Garamond' }}>
-            "Dedicated to preserving the sacred traditions of Kottilingal Tharavadu and ensuring financial transparency, family unity, and divine continuity for generations to come."
+            "Maintaining the sacred traditions passed down through the generations — preserving the divine legacy of Kottilingal Tharavadu with financial transparency, family unity, and devotion for generations to come."
           </blockquote>
         </div>
       </section>
