@@ -1,0 +1,78 @@
+version: '3.9'
+
+services:
+  db:
+    image: postgres:15-alpine
+    container_name: temple_db
+    restart: always
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-templedb}
+      POSTGRES_USER: ${POSTGRES_USER:-templeadmin}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-templepass}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - temple_net
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U templeadmin -d templedb"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: temple_backend
+    restart: always
+    environment:
+      DATABASE_URL: postgresql://${POSTGRES_USER:-templeadmin}:${POSTGRES_PASSWORD:-templepass}@db:5432/${POSTGRES_DB:-templedb}
+      SECRET_KEY: ${SECRET_KEY:-supersecretkey_change_in_prod}
+      ALGORITHM: HS256
+      ACCESS_TOKEN_EXPIRE_MINUTES: 60
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - temple_net
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./backend:/app
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: temple_frontend
+    restart: always
+    depends_on:
+      - backend
+    networks:
+      - temple_net
+    ports:
+      - "3000:80"
+
+  nginx:
+    image: nginx:alpine
+    container_name: temple_nginx
+    restart: always
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./nginx/ssl:/etc/nginx/ssl:ro
+    depends_on:
+      - frontend
+      - backend
+    networks:
+      - temple_net
+
+volumes:
+  postgres_data:
+    driver: local
+
+networks:
+  temple_net:
+    driver: bridge
