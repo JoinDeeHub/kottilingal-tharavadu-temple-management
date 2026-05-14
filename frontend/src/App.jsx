@@ -12,6 +12,7 @@ import Events from './pages/Events'
 import Sponsors from './pages/Sponsors'
 import Donate from './pages/Donate'
 import Gallery from './pages/Gallery'
+import Videos from './pages/Videos'
 import Admin from './pages/Admin'
 import Login from './pages/Login'
 import Contact from './pages/Contact'
@@ -24,7 +25,7 @@ export default function App() {
         <ScrollProgress />
         <StarField />
         <Toaster position="top-center" toastOptions={{
-          style: { background: '#0A0E1A', color: '#C9A84C', border: '1px solid rgba(201,168,76,0.3)' }
+          style: { background: '#080C17', color: '#C9A84C', border: '1px solid rgba(201,168,76,0.3)' }
         }} />
         <PetalRain />
         <AmbientAudio />
@@ -36,6 +37,7 @@ export default function App() {
           <Route path="/sponsors" element={<Sponsors />} />
           <Route path="/donate" element={<Donate />} />
           <Route path="/gallery" element={<Gallery />} />
+          <Route path="/videos" element={<Videos />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/login" element={<Login />} />
           <Route path="/admin/*" element={<Admin />} />
