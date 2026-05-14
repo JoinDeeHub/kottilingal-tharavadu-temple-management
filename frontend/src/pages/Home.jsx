@@ -148,7 +148,7 @@ export default function Home() {
             position: 'relative',
           }}
         >
-          {/* Pulsing temple circle */}
+          {/* Pulsing temple circle with temple-hero.jpg */}
           <motion.div
             animate={{
               boxShadow: [
@@ -164,12 +164,28 @@ export default function Home() {
               width: 'clamp(140px, 20vw, 220px)', height: 'clamp(140px, 20vw, 220px)',
               borderRadius: '50%',
               border: '2px solid rgba(201,168,76,0.4)',
-              background: 'radial-gradient(circle, rgba(139,0,0,0.3) 0%, rgba(10,14,26,0.8) 70%)',
-              display: 'flex', alignItems: 'center', justifyContent: 'center',
-              fontSize: 'clamp(3rem, 8vw, 5rem)',
+              overflow: 'hidden',
               boxShadow: 'inset 0 0 40px rgba(201,168,76,0.08)',
+              position: 'relative',
             }}>
-              🛕
+              <img
+                src="/temple-hero.jpg"
+                alt="Kottilingal Tharavadu Bhagavathi Temple"
+                width="220"
+                height="220"
+                style={{
+                  width: '100%',
+                  height: '100%',
+                  objectFit: 'cover',
+                  objectPosition: 'center top',
+                  display: 'block',
+                }}
+                onError={e => {
+                  e.target.style.display = 'none'
+                  e.target.parentNode.style.background = 'radial-gradient(circle, rgba(139,0,0,0.3) 0%, rgba(10,14,26,0.8) 70%)'
+                  e.target.parentNode.innerHTML += '<span style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:clamp(3rem,8vw,5rem)">🛕</span>'
+                }}
+              />
             </div>
           </motion.div>
 
