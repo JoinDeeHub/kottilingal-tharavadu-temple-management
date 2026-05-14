@@ -70,3 +70,4 @@ git clone https://github.com/JoinDeeHub/kottilingal-tharavadu-temple-management.
 cp .env.example .env && nano .env
 docker-compose up -d
 ```
+on each change, to test you use - git pull origin main && docker compose down && docker compose up --build -d
